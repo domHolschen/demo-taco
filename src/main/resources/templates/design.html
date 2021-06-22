@@ -2,12 +2,13 @@
 <html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
-    <title>Build Your Own Taco</title>
+    <title>Build Your Own Taco!</title>
     <link rel="stylesheet" th:href="@{/styles.css}"/>
+    <link rel="shortcut icon" href="@{/images/god.png}">
 </head>
 <body>
 <h1>Design your taco!</h1>
-<img th:src="@{/images/god.png}"/>
+<img th:src="@{/images/taco_tuesday.jpg}"/>
 <form method="post" th:object="${design}">
     <div class="grid">
         <div clas="ingredient-group" id="wraps">
@@ -35,7 +36,7 @@
             </div>
         </div>
         <div clas="ingredient-group" id="veggies">
-            <h3>Cheese please?</h3>
+            <h3>Add some veggies or I'm telling your mom.</h3>
             <div th:each="ingredient : ${veggies}">
                 <input name="ingredients" type="checkbox" th:value="${ingredient.id}"/>
                 <span th:text="${ingredient.name}">INGREDIENT</span>
@@ -43,7 +44,7 @@
             </div>
         </div>
         <div clas="ingredient-group" id="sauces">
-            <h3>Cheese please?</h3>
+            <h3>Sauce it up!</h3>
             <div th:each="ingredient : ${sauce}">
                 <input name="ingredients" type="checkbox" th:value="${ingredient.id}"/>
                 <span th:text="${ingredient.name}">INGREDIENT</span>

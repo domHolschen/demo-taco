@@ -4,9 +4,12 @@ import com.example.demotaco.Ingredient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +30,7 @@ public class DesignTacoController {
                 new Ingredient("TMTO", "Tomatoes", Ingredient.Type.VEGGIES),
                 new Ingredient("CHED", "Cheddar", Ingredient.Type.CHEESE),
                 new Ingredient("JACK", "Pepper Jack", Ingredient.Type.CHEESE),
-                new Ingredient("SLSA", "Ground Beef", Ingredient.Type.SAUCE),
+                new Ingredient("RNCH", "Ranch", Ingredient.Type.SAUCE),
                 new Ingredient("SCRM", "Sour Cream", Ingredient.Type.SAUCE)
         );
         Ingredient.Type[] types = Ingredient.Type.values();
@@ -36,6 +39,15 @@ public class DesignTacoController {
         }
         model.addAttribute("design", new Taco());
         return "design";
+    }
+
+    @PostMapping
+    public String processDesign(@Valid Taco taco, Errors error) {
+        if (error.hasErrors()) {
+            return "design";
+        }
+        log.info("Processing taco design for " + taco.getName());
+        return "redirect:/orders/current";
     }
 
     private List<Ingredient> filterByType(List<Ingredient> ingredients, Ingredient.Type type) {
