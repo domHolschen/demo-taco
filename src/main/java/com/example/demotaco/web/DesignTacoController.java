@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -19,8 +20,8 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/design")
 public class DesignTacoController {
-    @GetMapping
-    public String showDesignForm(Model model){
+    @ModelAttribute
+    public void addIngredientsToModel(Model model) {
         List<Ingredient> ingredients = Arrays.asList(
                 new Ingredient("FLTO", "Flour Tortilla", Ingredient.Type.WRAP),
                 new Ingredient("COTO", "Corn Tortilla", Ingredient.Type.WRAP),
@@ -35,14 +36,18 @@ public class DesignTacoController {
         );
         Ingredient.Type[] types = Ingredient.Type.values();
         for (Ingredient.Type type : types) {
-            model.addAttribute(type.toString().toLowerCase(Locale.ROOT), filterByType(ingredients,type));
+            model.addAttribute(type.toString().toLowerCase(Locale.ROOT), filterByType(ingredients, type));
         }
+    }
+
+    @GetMapping
+    public String showDesignForm(Model model) {
         model.addAttribute("design", new Taco());
         return "design";
     }
 
     @PostMapping
-    public String processDesign(@Valid Taco taco, Errors error) {
+    public String processDesign(@Valid @ModelAttribute("design") Taco taco, Errors error) {
         if (error.hasErrors()) {
             return "design";
         }
@@ -51,6 +56,6 @@ public class DesignTacoController {
     }
 
     private List<Ingredient> filterByType(List<Ingredient> ingredients, Ingredient.Type type) {
-        return ingredients.stream().filter(x-> x.getType().equals(type)).collect(Collectors.toList());
+        return ingredients.stream().filter(x -> x.getType().equals(type)).collect(Collectors.toList());
     }
 }
