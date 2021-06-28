@@ -1,4 +1,4 @@
-package com.example.demotaco;
+package com.example.demotaco.domain;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
