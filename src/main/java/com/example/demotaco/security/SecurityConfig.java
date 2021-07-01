@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
@@ -23,16 +24,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/design", "/orders")
-                .hasAnyRole("ADMIN", "USER")
+                .hasAnyAuthority("BEANS", "TORTILLA")
                 .antMatchers("/", "/**", "/register")
                 .access("permitAll")
                 .and()
+                .formLogin()
+                .loginPage("/login")
+                .loginProcessingUrl("/authenticate")
+                .defaultSuccessUrl("/design")
+                .failureUrl("/login")
+                .and()
+                .logout()
+                .logoutSuccessUrl("/login")
+                .invalidateHttpSession(true)
+                .permitAll()
+            /*    .and()
                 .csrf()
-                .disable();
+                .disable()*/;
         http.headers().frameOptions().disable();
     }
+
+    @Bean
+    public PasswordEncoder defineEncoding() {
+        return new BCryptPasswordEncoder();
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(defineEncoding())
+                .and()
+                .inMemoryAuthentication()
+                .withUser("admin")
+                .password(defineEncoding().encode("curds"))
+                .authorities("BEANS");
     }
 
     @Bean

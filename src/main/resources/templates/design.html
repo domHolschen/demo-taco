@@ -7,9 +7,14 @@
     <link rel="shortcut icon" href="@{/images/god.png}">
 </head>
 <body>
+<div class="box">
+    <form method="POST" th:action="@{/logout}">
+        <input type="submit" value="Logout"/>
+    </form>
+</div>
 <h1>Design your taco!</h1>
 <img th:src="@{/images/taco_tuesday.jpg}"/>
-<form method="post" th:object="${design}">
+<form method="post" th:object="${design}" th:action="@{/design}">
     <div class="grid">
         <span class="validationError"
         th:if="${#fields.hasErrors('ingredients')}"
@@ -62,6 +67,7 @@
                   th:errors="*{name}">Name error!</span>
             <br/>
             <button>MAKE MY TACO!!!</button>
+            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
         </div>
     </div>
 </form>

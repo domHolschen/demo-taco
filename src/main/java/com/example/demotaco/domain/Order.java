@@ -16,6 +16,14 @@ import java.util.List;
 @Entity
 @Table(name="Taco_Order")
 public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+
+
+
+
     @NotBlank(message = "Enter a non-blank name.")
     private String name;
     @NotBlank(message = "Enter a non-blank street address.")
@@ -32,10 +40,6 @@ public class Order {
     private String ccExpiration;
     @Digits(integer = 3, fraction = 0, message = "Invalid CVV")
     private String ccCVV;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
     private Date createdAt;
 
     @ManyToMany(targetEntity = Taco.class)
@@ -44,6 +48,9 @@ public class Order {
     public void addTaco(Taco taco) {
         this.tacos.add(taco);
     }
+
+    @ManyToOne
+    private User user;
 
     @PrePersist
     void createdAd() {
